@@ -14,14 +14,14 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        return productRepository.fetchAllProducts();
     }
 
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+        return productRepository.findByProductId(id);
     }
 
     public void addProduct(Product product) {
-        productRepository.save(product);
+        productRepository.insertProduct(product.getName(), product.getDescription(), product.getPrice(), product.getQuantity());
     }
 }
