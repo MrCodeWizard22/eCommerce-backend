@@ -10,4 +10,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.email = :email") 
     Optional<User> findByEmail(@Param("email") String email);
+
+    @Query("SELECT CASE WHEN COUNT(u) > 0 THEN TRUE ELSE FALSE END FROM User u WHERE u.email = :email")
+    boolean existsByEmail(@Param("email") String email);
 }

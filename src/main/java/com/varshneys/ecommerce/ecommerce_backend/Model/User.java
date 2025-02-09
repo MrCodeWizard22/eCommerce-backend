@@ -39,6 +39,20 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    // public List<String> getRoles() {
+    //     return List.of(role.name());
+    // }
+    // public void setRoles(List<String> roles) {
+    //     this.role = Role.valueOf(roles.get(0));
+    // }
+    public Role getRole() { // Add the getRole() method!
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     @JsonIgnore
     @OneToMany(mappedBy = "user",  cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Order> orders;
