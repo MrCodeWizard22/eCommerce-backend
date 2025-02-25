@@ -1,23 +1,32 @@
 package com.varshneys.ecommerce.ecommerce_backend.controllers;
 
-import com.varshneys.ecommerce.ecommerce_backend.Model.User;
-import com.varshneys.ecommerce.ecommerce_backend.payload.AuthRequest;
-import com.varshneys.ecommerce.ecommerce_backend.payload.AuthResponse;
-import com.varshneys.ecommerce.ecommerce_backend.repository.UserRepository;
-import com.varshneys.ecommerce.ecommerce_backend.security.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+// import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+// import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+// import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+// import com.varshneys.ecommerce.ecommerce_backend.Model.Role;
+import com.varshneys.ecommerce.ecommerce_backend.Model.User;
+import com.varshneys.ecommerce.ecommerce_backend.payload.AuthRequest;
+import com.varshneys.ecommerce.ecommerce_backend.payload.AuthResponse;
+import com.varshneys.ecommerce.ecommerce_backend.repository.UserRepository;
+import com.varshneys.ecommerce.ecommerce_backend.security.JwtUtil;
+import com.varshneys.ecommerce.ecommerce_backend.security.UserDetailImpl;
 
 @RestController
 
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:5173")
+// @CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -62,4 +71,23 @@ public class AuthController {
 
         return ResponseEntity.ok("User registered successfully"); 
     }
+
+    // oauth login
+    // @GetMapping("/google/success")
+    // public ResponseEntity<AuthResponse> googleLogin(@AuthenticationPrincipal OidcUser user) {
+    //     String email = user.getEmail();
+        
+    //     User existingUser = userRepository.findByEmail(email)
+    //     .orElseGet(() -> {
+    //         User newUser = new User();
+    //         newUser.setEmail(email);
+    //         newUser.setPassword(null); 
+    //         newUser.setRole(Role.USER);
+    //         return userRepository.save(newUser);
+    //     });
+
+    //     String jwt = jwtUtil.generateToken(email);
+    //     return ResponseEntity.ok(new AuthResponse(jwt, existingUser.getUserId(), email));
+    // }
+
 }
