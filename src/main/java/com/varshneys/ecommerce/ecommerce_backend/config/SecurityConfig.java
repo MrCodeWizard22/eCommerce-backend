@@ -48,8 +48,10 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) 
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/oauth2/**", "/login/oauth2/**").permitAll()  
+                .requestMatchers("/api/categories/**").permitAll()
                 .requestMatchers("/api/products/**").authenticated()
                 .anyRequest().authenticated()
+                
             )
             
             .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);

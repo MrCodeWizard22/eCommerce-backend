@@ -4,6 +4,7 @@ import com.varshneys.ecommerce.ecommerce_backend.Model.Product;
 import com.varshneys.ecommerce.ecommerce_backend.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,7 +22,15 @@ public class ProductService {
         return productRepository.findByProductId(id);
     }
 
+    @Transactional
     public void addProduct(Product product) {
-        productRepository.insertProduct(product.getName(), product.getDescription(), product.getPrice(), product.getQuantity());
+        productRepository.insertProduct(
+            product.getName(), 
+            product.getDescription(), 
+            product.getPrice(), 
+            product.getQuantity(), 
+            product.getImageUrl(), 
+            product.getCategory().getCategoryId()
+        );
     }
 }

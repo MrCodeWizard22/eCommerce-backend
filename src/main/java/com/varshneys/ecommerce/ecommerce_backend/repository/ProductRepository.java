@@ -26,12 +26,15 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
     // Insert product (use native query with explicit column names)
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO products (name, description, price, quantity) VALUES (:name, :description, :price, :quantity)", nativeQuery = true)
+    @Query(value = "INSERT INTO products (name, description, price, quantity, image_url, category_id) VALUES (:name, :description, :price, :quantity, :imageUrl, :categoryId)", nativeQuery = true)
     void insertProduct(
         @Param("name") String name, 
         @Param("description") String description, 
         @Param("price") Double price, 
-        @Param("quantity") Integer quantity
+        @Param("quantity") Integer quantity,
+        @Param("imageUrl") String imageUrl,
+        @Param("categoryId") Long categoryId  
     );
+
 
 }
