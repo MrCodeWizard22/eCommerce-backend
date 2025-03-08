@@ -29,7 +29,7 @@ public class ProductController {
     // @CrossOrigin(origins = "http://localhost:5173") 
     @GetMapping
     public List<Product> getAllProducts() {
-        System.out.println("------Inside ProductController.java---------" + productService.getAllProducts().get(0).getImageUrl());
+        // System.out.println("------Inside ProductController.java---------" + productService.getAllProducts().get(0).getImageUrl());
         return productService.getAllProducts();
     }
 
@@ -73,5 +73,11 @@ public class ProductController {
         } catch (IOException e) {
             return ResponseEntity.status(500).body("{\"error\":\"Failed to upload image\"}");
         }
+       
+    }
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable Long categoryId) {
+        List<Product> products = productService.getProductsByCategory(categoryId);
+        return ResponseEntity.ok(products);
     }
 }

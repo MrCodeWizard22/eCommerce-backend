@@ -33,4 +33,7 @@ public class ProductService {
             product.getCategory().getCategoryId()
         );
     }
+    public List<Product> getProductsByCategory(Long categoryId) {
+        return productRepository.getAllByCategory(categoryId);
+    }
 }
