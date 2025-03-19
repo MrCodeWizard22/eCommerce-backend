@@ -15,6 +15,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "products")
 @NoArgsConstructor
@@ -32,17 +34,14 @@ public class Product {
     private String imageUrl;
     
     @OneToMany(mappedBy = "product")
+    @JsonIgnore  // Prevents infinite recursion
     private List<OrderItem> orderItems;
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnore  // Prevents infinite recursion
     private List<Cart> cartItems;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-    // getter and setter methods
-
-    
-
-
 }

@@ -45,13 +45,14 @@ public class SecurityConfig {
                 return config;
             }))
             .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) 
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/oauth2/**", "/login/oauth2/**").permitAll()  
+                .requestMatchers("/api/auth/id").authenticated() 
+                .requestMatchers("/api/auth/**", "/oauth2/**", "/login/oauth2/**").permitAll()
                 .requestMatchers("/api/categories/**").permitAll()
                 .requestMatchers("/api/products/**").authenticated()
+                .requestMatchers("/api/cart/**").authenticated()
                 .anyRequest().authenticated()
-                
             )
             
             .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);

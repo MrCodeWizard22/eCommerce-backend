@@ -8,11 +8,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 // import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 // import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 // import com.varshneys.ecommerce.ecommerce_backend.Model.Role;
@@ -23,11 +25,15 @@ import com.varshneys.ecommerce.ecommerce_backend.repository.UserRepository;
 import com.varshneys.ecommerce.ecommerce_backend.security.JwtUtil;
 import com.varshneys.ecommerce.ecommerce_backend.security.UserDetailImpl;
 
-@RestController
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+@RestController
 @RequestMapping("/api/auth")
 // @CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
@@ -89,5 +95,14 @@ public class AuthController {
     //     String jwt = jwtUtil.generateToken(email);
     //     return ResponseEntity.ok(new AuthResponse(jwt, existingUser.getUserId(), email));
     // }
+    @GetMapping("/id")
+    public ResponseEntity<Long> getUserId(@RequestParam("email") String email) { 
+        // logger.info("Received email: {}", email);
 
+        Long userId = userRepository.getUserIdByEmail(email);
+        if (userId == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(userId);
+    }
 }

@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @AllArgsConstructor
@@ -29,6 +30,7 @@ public class Cart {
 
     @ManyToOne
     @JoinColumn(name = "user_id")  
+    @JsonIgnore 
     private User user;
 
     @ManyToOne
