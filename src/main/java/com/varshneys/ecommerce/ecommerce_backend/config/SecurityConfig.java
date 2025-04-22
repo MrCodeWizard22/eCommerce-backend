@@ -50,6 +50,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/id").authenticated() 
                 .requestMatchers("/api/auth/**", "/oauth2/**", "/login/oauth2/**").permitAll()
                 .requestMatchers("/api/categories/**").permitAll()
+                .requestMatchers("/images/**").permitAll()
                 .requestMatchers("/api/products/**").authenticated()
                 .requestMatchers("/api/cart/**").authenticated()
                 .anyRequest().authenticated()

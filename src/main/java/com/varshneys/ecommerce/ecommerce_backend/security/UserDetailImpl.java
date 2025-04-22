@@ -14,13 +14,15 @@ public class UserDetailImpl implements UserDetails {
     private String password;
     private Long userId;
     private String name;
+    private String role;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailImpl(String email, String password, Long userId, String name, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailImpl(String email, String password, Long userId, String name, String role,  Collection<? extends GrantedAuthority> authorities) {
         this.email = email;
         this.password = password;
         this.userId = userId;
         this.name = name;
+        this.role = role; // Convert Role to String
         this.authorities = authorities;
     }
 
@@ -28,8 +30,9 @@ public class UserDetailImpl implements UserDetails {
         List<GrantedAuthority> authorities = user.getRole() != null  // Check if role is not null
                 ? List.of(new SimpleGrantedAuthority(user.getRole().name())) // Create authority from the single role
                 : List.of(); // Empty list if role is null
+                // System.out.println("User role: " + user.getRole());
 
-        return new UserDetailImpl(user.getEmail(), user.getPassword(), user.getUserId(), user.getName(), authorities);
+        return new UserDetailImpl(user.getEmail(), user.getPassword(), user.getUserId(), user.getName(), user.getRole().name(), authorities);
     }
 
     @Override
@@ -55,7 +58,9 @@ public class UserDetailImpl implements UserDetails {
     public boolean isAccountNonExpired() {
         return true;
     }
-
+    public String getRole() {
+        return role;
+    }
     @Override
     public boolean isAccountNonLocked() {
         return true;
