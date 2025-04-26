@@ -1,32 +1,27 @@
 package com.varshneys.ecommerce.ecommerce_backend.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-// import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
-// import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-// import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-// import com.varshneys.ecommerce.ecommerce_backend.Model.Role;
 import com.varshneys.ecommerce.ecommerce_backend.Model.User;
 import com.varshneys.ecommerce.ecommerce_backend.payload.AuthRequest;
 import com.varshneys.ecommerce.ecommerce_backend.payload.AuthResponse;
 import com.varshneys.ecommerce.ecommerce_backend.repository.UserRepository;
 import com.varshneys.ecommerce.ecommerce_backend.security.JwtUtil;
 import com.varshneys.ecommerce.ecommerce_backend.security.UserDetailImpl;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -60,7 +55,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         
         UserDetailImpl userDetails = (UserDetailImpl) authentication.getPrincipal();
-        String jwt = jwtUtil.generateToken(userDetails.getUsername());
+        String jwt = jwtUtil.generateToken(userDetails.getUsername(), userDetails.getRole());
 
         return ResponseEntity.ok(new AuthResponse(jwt, userDetails.getUserId(), userDetails.getUsername(), userDetails.getRole()));
     }

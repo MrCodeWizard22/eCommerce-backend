@@ -21,5 +21,4 @@ public class AuthResponse {
         this.role = role;
     }
 
-    // Getters and setters for the fields
 }

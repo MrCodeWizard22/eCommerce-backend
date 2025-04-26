@@ -1,10 +1,14 @@
 package com.varshneys.ecommerce.ecommerce_backend.repository;
 
-import com.varshneys.ecommerce.ecommerce_backend.Model.User;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import java.util.Optional;
+
+import com.varshneys.ecommerce.ecommerce_backend.Model.User;
+
 
 public interface UserRepository extends CrudRepository<User, Long> {
 
@@ -16,4 +20,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Query("SELECT u.id FROM User u WHERE LOWER(u.email) = LOWER(:email)")
     Long getUserIdByEmail(@Param("email") String email);
+
+    // find all 
+    @Query("SELECT u FROM User u")
+    List<User> findAllUsers();
 }
