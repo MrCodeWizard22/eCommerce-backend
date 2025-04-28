@@ -1,19 +1,27 @@
 package com.varshneys.ecommerce.ecommerce_backend.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.varshneys.ecommerce.ecommerce_backend.Model.Product;
-import com.varshneys.ecommerce.ecommerce_backend.Model.Category;
-import com.varshneys.ecommerce.ecommerce_backend.services.ProductService;
-
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.varshneys.ecommerce.ecommerce_backend.Model.Category;
+import com.varshneys.ecommerce.ecommerce_backend.Model.Product;
+import com.varshneys.ecommerce.ecommerce_backend.Model.Role;
+import com.varshneys.ecommerce.ecommerce_backend.Model.User;
+import com.varshneys.ecommerce.ecommerce_backend.repository.UserRepository;
+import com.varshneys.ecommerce.ecommerce_backend.services.ProductService;
 
 @RestController
 @RequestMapping("/api/products")
@@ -22,6 +30,8 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private UserRepository userRepository;
 
     private static final String UPLOAD_DIR = "src/main/resources/static/images/";
 
@@ -40,12 +50,14 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<String> addProduct(
-            @RequestParam("name") String name,
-            @RequestParam("description") String description,
-            @RequestParam("price") Double price,
-            @RequestParam("quantity") Integer quantity,
-            @RequestParam(value = "categoryId", required = false) Long categoryId,
-            @RequestParam("image") MultipartFile file) {
+        @RequestParam("name") String name,
+        @RequestParam("description") String description,
+        @RequestParam("price") Double price,
+        @RequestParam("quantity") Integer quantity,
+        @RequestParam(value = "categoryId", required = false) Long categoryId,
+        @RequestParam("image") MultipartFile file,
+        @RequestParam("sellerId") Long sellerId) {
+
 
         try {
             // Save image
@@ -66,6 +78,19 @@ public class ProductController {
             category.setCategoryId(categoryId);
             product.setCategory(category);
 
+            // System.out.println("Seller id before : " + sellerId);
+            // for seller 
+            User seller = userRepository.findUserById(sellerId);  
+            if (seller == null) {
+                return ResponseEntity.status(400).body("{\"error\":\"Invalid sellerId\"}");
+            }
+            // Add this before saving the product
+            // System.out.println("Seller ID after : " + sellerId);
+            // System.out.println("Product Seller: " + product.getSeller());
+            product.setSeller(seller);
+
+            // System.out.println("Product Seller after setting: " + product.getSeller());
+
             // Save product
             productService.addProduct(product);
 
@@ -80,4 +105,17 @@ public class ProductController {
         List<Product> products = productService.getProductsByCategory(categoryId);
         return ResponseEntity.ok(products);
     }
+
+    @GetMapping("/seller/{sellerId}")
+    public List<Product> getProductsBySeller(@PathVariable Long sellerId) {
+        User seller = userRepository.findById(sellerId)
+            .orElseThrow(() -> new RuntimeException("Seller not found"));
+
+        if (seller.getRole() != Role.SELLER) {
+            throw new RuntimeException("User is not a seller");
+        }
+
+        return productService.getProductsBySellerId(sellerId);
+    }
+
 }
