@@ -35,11 +35,11 @@ public class Product {
     private String imageUrl;
     
     @OneToMany(mappedBy = "product")
-    @JsonIgnore  // Prevents infinite recursion
+    @JsonIgnore  
     private List<OrderItem> orderItems;
 
     @OneToMany(mappedBy = "product")
-    @JsonIgnore  // Prevents infinite recursion
+    @JsonIgnore  
     private List<Cart> cartItems;
 
     @ManyToOne

@@ -40,7 +40,12 @@ public class ProductRequestService {
     }
 
     // get request by Id
-    // public ProductRequest getRequestById(Long id) {
-    //     return productRequestRepository.findById(id).orElse(null);
-    // }
+    public ProductRequest getRequestById(Long id) {
+        return productRequestRepository.findById(id).orElse(null);
+    }
+
+    // delete request by Id
+    public void deleteRequestById(Long id) {
+        productRequestRepository.deleteById(id);
+    }
 }

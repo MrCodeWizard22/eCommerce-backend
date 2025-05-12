@@ -40,5 +40,5 @@ public class ProductRequest {
     private User seller;
 
     private String imageUrl;
-    private int status; // 0 for pending, 1 for approved, 2 for rejected
+    private int status; 
 }

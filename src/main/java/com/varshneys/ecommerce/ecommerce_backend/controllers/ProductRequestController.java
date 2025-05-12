@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.varshneys.ecommerce.ecommerce_backend.Model.Category;
+import com.varshneys.ecommerce.ecommerce_backend.Model.Product;
 import com.varshneys.ecommerce.ecommerce_backend.Model.ProductRequest;
 import com.varshneys.ecommerce.ecommerce_backend.Model.User;
 import com.varshneys.ecommerce.ecommerce_backend.repository.CategoryRepository;
@@ -60,13 +61,13 @@ public class ProductRequestController {
 
         try {
 
-            System.out.println("name: " + name);
-            System.out.println("description: " + description);
-            System.out.println("price: " + price);
-            System.out.println("quantity: " + quantity);
-            System.out.println("categoryId: " + categoryId);
-            System.out.println("sellerId: " + sellerId);
-            System.out.println("image: " + file.getOriginalFilename());
+            // System.out.println("name: " + name);
+            // System.out.println("description: " + description);
+            // System.out.println("price: " + price);
+            // System.out.println("quantity: " + quantity);
+            // System.out.println("categoryId: " + categoryId);
+            // System.out.println("sellerId: " + sellerId);
+            // System.out.println("image: " + file.getOriginalFilename());
 
 
             // Save the image file
@@ -107,49 +108,49 @@ public class ProductRequestController {
     // Approve a request and add it as a product
     @PostMapping("/approve")
     public ResponseEntity<String> approveRequest(@RequestParam long requestId) {
-        // ProductRequest request = productRequestService.getRequestById(requestId);
-        // if (request == null || request.getStatus() != 0) {
-        //     return ResponseEntity.badRequest().body("Invalid or already processed request.");
-        // }
+        ProductRequest request = productRequestService.getRequestById(requestId);
+        if (request == null) {
+            return ResponseEntity.badRequest().body("Request not found.");
+        }
 
-        // User seller = userRepository.findByEmail(request.getSellerId()).orElse(null);
-        // if (seller == null) {
-        //     return ResponseEntity.badRequest().body("Seller not found.");
-        // }
+        User seller = userRepository.findById(request.getSeller().getUserId()).orElse(null);
+        if (seller == null) {
+            return ResponseEntity.badRequest().body("Seller not found.");
+        }
 
-        // Category category = categoryRepository.findByName(request.getCategory());
-        // if (category == null) {
-        //     return ResponseEntity.badRequest().body("Category not found.");
-        // }
+        Category category = categoryRepository.findByName(request.getCategory().getName());
+        if (category == null) {
+            return ResponseEntity.badRequest().body("Category not found.");
+        }
 
-        // Product product = new Product();
-        // product.setName(request.getName());
-        // product.setDescription(request.getDescription());
-        // product.setPrice(request.getPrice());
-        // product.setQuantity(request.getQuantity());
-        // product.setImageUrl(request.getImageUrl());
-        // product.setSeller(seller);
-        // product.setCategory(category);
+        Product product = new Product();
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setQuantity(request.getQuantity());
+        product.setImageUrl(request.getImageUrl());
+        product.setSeller(seller);
+        product.setCategory(category);
 
-        // productService.addProduct(product);
+        productService.addProduct(product);
 
-        // request.setStatus(1); // 1 = approved
-        // productRequestService.addProductRequest(request);
+        productRequestService.deleteRequestById(requestId); 
 
         return ResponseEntity.ok("Request approved and product added.");
     }
 
+
     // Reject a request
     @PostMapping("/reject")
     public ResponseEntity<String> rejectRequest(@RequestParam long requestId) {
-        // ProductRequest request = productRequestService.getRequestById(requestId);
-        // if (request == null || request.getStatus() != 0) {
-        //     return ResponseEntity.badRequest().body("Invalid or already processed request.");
-        // }
+        ProductRequest request = productRequestService.getRequestById(requestId);
+        if (request == null) {
+            return ResponseEntity.badRequest().body("Request not found.");
+        }
 
-        // request.setStatus(2); // 2 = rejected
-        // productRequestService.addProductRequest(request);
+        productRequestService.deleteRequestById(requestId); 
 
-        return ResponseEntity.ok("Request rejected.");
+        return ResponseEntity.ok("Request rejected and removed.");
     }
+
 }
