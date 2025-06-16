@@ -1,18 +1,18 @@
 package com.varshneys.ecommerce.ecommerce_backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @AllArgsConstructor
@@ -28,9 +28,9 @@ public class Cart {
 
     private int quantity;
 
+    @JsonBackReference("user-cart")
     @ManyToOne
-    @JoinColumn(name = "user_id")  
-    @JsonIgnore 
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne

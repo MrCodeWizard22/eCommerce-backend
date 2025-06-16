@@ -1,5 +1,7 @@
 package com.varshneys.ecommerce.ecommerce_backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,6 +17,7 @@ import lombok.Setter;
 
 @Table(name = "review")
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -24,6 +27,7 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
 
+    @JsonBackReference("user-reviews")
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

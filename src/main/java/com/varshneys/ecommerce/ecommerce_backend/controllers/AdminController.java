@@ -13,7 +13,6 @@ import com.varshneys.ecommerce.ecommerce_backend.Model.Product;
 import com.varshneys.ecommerce.ecommerce_backend.Model.User;
 import com.varshneys.ecommerce.ecommerce_backend.services.AdminService;
 
-
 @RestController
 @RequestMapping("/api/admin")
 @CrossOrigin(origins = "http://localhost:5173")

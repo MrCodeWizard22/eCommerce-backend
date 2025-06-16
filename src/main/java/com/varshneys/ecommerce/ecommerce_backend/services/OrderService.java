@@ -10,11 +10,17 @@ import com.varshneys.ecommerce.ecommerce_backend.repository.OrderRepository;
 
 @Service
 public class OrderService {
+    
     @Autowired
-    OrderRepository orderRepository;
-    //get all orders
-    public List<Order> getAllOrders() {
-        return (List<Order>) orderRepository.findAllOrder();
+    private OrderRepository orderRepository;
+    
+    public void updateOrderStatus(Long orderId, String status) {
+        // This is a placeholder implementation
+        // You'll need to implement the actual order status update logic
+        System.out.println("Order " + orderId + " status updated to: " + status);
     }
-
+    
+    public List<Order> getAllOrders() {
+        return orderRepository.findAllOrder();
+    }
 }

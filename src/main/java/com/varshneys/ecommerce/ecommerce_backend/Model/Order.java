@@ -1,6 +1,10 @@
 package com.varshneys.ecommerce.ecommerce_backend.Model;
 
-import jakarta.annotation.Generated;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +18,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.List;
 
 @Getter
 @Setter
@@ -32,12 +35,14 @@ public class Order {
     private String shippingAddress;
     private String paymentMethod;
     private double orderTotal;
-    private String orderStatus;
+    private int orderStatus;
 
+    @JsonBackReference("user-orders")
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    @JsonManagedReference("order-items")
     @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems;
 

@@ -1,5 +1,7 @@
 package com.varshneys.ecommerce.ecommerce_backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -35,6 +37,7 @@ public class ProductRequest {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @JsonIgnoreProperties({"orders", "cartItems", "reviews"})
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "seller_id")
     private User seller;

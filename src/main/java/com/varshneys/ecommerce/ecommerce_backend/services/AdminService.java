@@ -12,7 +12,6 @@ import com.varshneys.ecommerce.ecommerce_backend.Model.User;
 import com.varshneys.ecommerce.ecommerce_backend.repository.UserRepository;
 
 @Service
-
 public class AdminService {
     @Autowired
     UserRepository userRepository;
@@ -21,21 +20,21 @@ public class AdminService {
     @Autowired
     ProductService productService;
 
-
     // get all user 
     public List<User> getAllUsers() {
         return userRepository.findAllUsers().stream().filter(user -> user.getRole()== Role.USER).toList();
     }
+    
     // get all sellers 
-
     public List<User> getAllSellers() {
         return userRepository.findAllUsers().stream().filter(user -> user.getRole()==Role.SELLER).toList();
     }
+    
     // get all orders
-
     public List<Order> getAllOrders() {
         return orderService.getAllOrders();
     }
+    
     // get all products
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
