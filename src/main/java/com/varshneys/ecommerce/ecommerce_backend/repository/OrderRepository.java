@@ -11,7 +11,7 @@ import com.varshneys.ecommerce.ecommerce_backend.Model.Order;
 @Repository
 public interface OrderRepository extends CrudRepository<Order, Long> {
 
-    @Query("SELECT o FROM Order o WHERE o.user.id = :userId")
+    @Query("SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.orderItems oi LEFT JOIN FETCH oi.product WHERE o.user.id = :userId ORDER BY o.orderId DESC")
     List<Order> findAllOrdersByUserId(@Param("userId") Long userId);
 
     // Custom query to find all orders by seller ID

@@ -37,7 +37,7 @@ public class SecurityConfig {
         http
             .cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(List.of("http://localhost:5173")); 
+                config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174"));
                 config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
                 config.setAllowCredentials(true);
@@ -47,7 +47,8 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/id").authenticated() 
-                .requestMatchers("api/payments/**").authenticated()
+                .requestMatchers("/api/payments/health").permitAll()
+                .requestMatchers("/api/payments/**").authenticated()
                 .requestMatchers("/api/auth/**", "/oauth2/**", "/login/oauth2/**").permitAll()
                 .requestMatchers("/api/categories/**").permitAll()
                 .requestMatchers("/images/**").permitAll()
