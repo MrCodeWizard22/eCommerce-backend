@@ -84,8 +84,13 @@ public class OrderService {
             productRepository.save(product);
         }
 
+        // Add shipping cost to total amount
+        double shippingCost = request.getShippingCost();
+        double finalTotal = totalAmount + shippingCost;
+
         order.setOrderItems(orderItems);
-        order.setOrderTotal(totalAmount);
+        order.setOrderTotal(finalTotal);
+        order.setShippingCost(shippingCost); // Set shipping cost on the order
 
         Order savedOrder = orderRepository.save(order);
 
@@ -105,6 +110,7 @@ public class OrderService {
             shippingDetails.setCountry(shippingReq.getCountry());
             shippingDetails.setShippingMethod(shippingReq.getShippingMethod());
             shippingDetails.setDeliveryInstructions(shippingReq.getDeliveryInstructions());
+            // Note: shippingCost and estimatedDelivery are handled separately in the order total
 
             shippingService.createShippingDetails(savedOrder, shippingDetails);
         }
@@ -239,6 +245,13 @@ public class OrderService {
     }
 
     /**
+     * Get orders by seller ID
+     */
+    public List<Order> getOrdersBySellerId(Long sellerId) {
+        return orderRepository.findOrdersBySellerId(sellerId);
+    }
+
+    /**
      * Get order by ID
      */
     public Optional<Order> getOrderById(Long orderId) {
@@ -288,6 +301,14 @@ public class OrderService {
      * Create order from cart
      */
     public Order createOrderFromCart(Long userId, String shippingAddress, String paymentMethod) {
+        return createOrderFromCart(userId, shippingAddress, paymentMethod, 0.0, null);
+    }
+
+    /**
+     * Create order from cart with shipping cost and details
+     */
+    public Order createOrderFromCart(Long userId, String shippingAddress, String paymentMethod,
+                                   double shippingCost, CreateOrderRequest.ShippingDetailsRequest shippingDetails) {
         // Validate user exists
         userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("User not found"));
@@ -302,6 +323,8 @@ public class OrderService {
         request.setUserId(userId);
         request.setShippingAddress(shippingAddress);
         request.setPaymentMethod(paymentMethod);
+        request.setShippingCost(shippingCost);
+        request.setShippingDetails(shippingDetails);
 
         List<CreateOrderRequest.OrderItemRequest> items = new ArrayList<>();
         for (com.varshneys.ecommerce.ecommerce_backend.Model.Cart cartItem : cartItems) {

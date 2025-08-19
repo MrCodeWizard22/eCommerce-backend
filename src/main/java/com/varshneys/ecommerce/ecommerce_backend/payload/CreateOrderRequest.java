@@ -15,6 +15,7 @@ public class CreateOrderRequest {
     private String paymentMethod;
     private List<OrderItemRequest> items;
     private String notes;
+    private double shippingCost; // Shipping cost to be added to order total
 
     // Enhanced shipping information
     private ShippingDetailsRequest shippingDetails;
@@ -43,5 +44,7 @@ public class CreateOrderRequest {
         private String country;
         private String shippingMethod;
         private String deliveryInstructions;
+        private double shippingCost; // Shipping cost for this order
+        private String estimatedDelivery; // Estimated delivery date
     }
 }

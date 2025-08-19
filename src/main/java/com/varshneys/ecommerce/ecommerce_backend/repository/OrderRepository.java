@@ -15,7 +15,10 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
     List<Order> findAllOrdersByUserId(@Param("userId") Long userId);
 
     // Custom query to find all orders by seller ID
+    @Query("SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.user LEFT JOIN FETCH o.orderItems oi LEFT JOIN FETCH oi.product p WHERE p.seller.userId = :sellerId ORDER BY o.orderId DESC")
+    List<Order> findOrdersBySellerId(@Param("sellerId") Long sellerId);
+
     @Query("Select o from Order o")
-    List<Order> findAllOrder(); 
+    List<Order> findAllOrder();
     
 }

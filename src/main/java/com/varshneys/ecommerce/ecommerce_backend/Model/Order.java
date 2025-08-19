@@ -3,7 +3,7 @@ package com.varshneys.ecommerce.ecommerce_backend.Model;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -69,7 +69,7 @@ public class Order {
     private LocalDateTime deliveredAt;
     private LocalDateTime cancelledAt;
 
-    @JsonBackReference("user-orders")
+    @JsonIgnoreProperties({"orders", "password", "role"})
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

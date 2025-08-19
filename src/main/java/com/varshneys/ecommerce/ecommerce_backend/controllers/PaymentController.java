@@ -109,7 +109,7 @@ public class PaymentController {
     @PostMapping("/create-order-with-payment")
     public ResponseEntity<?> createOrderWithPayment(@RequestBody CreateOrderRequest orderRequest) {
         try {
-            // Create the order first
+            // Create the order first (shipping cost is already included in the order total)
             Order order = orderService.createOrder(orderRequest);
 
             // Create Razorpay order for payment
@@ -144,20 +144,19 @@ public class PaymentController {
     }
 
     @PostMapping("/create-order-from-cart")
-    public ResponseEntity<?> createOrderFromCart(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<?> createOrderFromCart(@RequestBody CreateOrderRequest request) {
         try {
-            Long userId = Long.parseLong(request.get("userId").toString());
-            String shippingAddress = request.get("shippingAddress").toString();
-            String paymentMethod = request.get("paymentMethod").toString();
+            Long userId = request.getUserId();
+            String shippingAddress = request.getShippingAddress();
+            String paymentMethod = request.getPaymentMethod();
+            double shippingCost = request.getShippingCost();
+            CreateOrderRequest.ShippingDetailsRequest shippingDetails = request.getShippingDetails();
 
-            // Create order from cart
-            Order order = orderService.createOrderFromCart(userId, shippingAddress, paymentMethod);
+            // Create order from cart with shipping cost included
+            Order order = orderService.createOrderFromCart(userId, shippingAddress, paymentMethod, shippingCost, shippingDetails);
 
-            // Calculate total including shipping if applicable
+            // Use the order total (which already includes shipping cost)
             double totalAmount = order.getOrderTotal();
-            if (order.getShippingCost() > 0) {
-                totalAmount += order.getShippingCost();
-            }
 
             // Create Razorpay order for payment
             com.razorpay.Order razorpayOrder = paymentService.createRazorpayOrder((int) totalAmount);

@@ -144,4 +144,22 @@ public class OrderController {
             return ResponseEntity.status(500).body(errorResponse);
         }
     }
+
+    @GetMapping("/seller/{sellerId}")
+    public ResponseEntity<?> getSellerOrders(@PathVariable Long sellerId) {
+        try {
+            List<Order> orders = orderService.getOrdersBySellerId(sellerId);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("orders", orders);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("status", "error");
+            errorResponse.put("message", "Failed to fetch seller orders: " + e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
+        }
+    }
 }
