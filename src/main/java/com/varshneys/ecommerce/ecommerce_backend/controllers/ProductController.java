@@ -84,12 +84,9 @@ public class ProductController {
             if (seller == null) {
                 return ResponseEntity.status(400).body("{\"error\":\"Invalid sellerId\"}");
             }
-            // Add this before saving the product
-            // System.out.println("Seller ID after : " + sellerId);
-            // System.out.println("Product Seller: " + product.getSeller());
+            
             product.setSeller(seller);
 
-            // System.out.println("Product Seller after setting: " + product.getSeller());
 
             // Save product
             productService.addProduct(product);

@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.varshneys.ecommerce.ecommerce_backend.Model.Role;
 import com.varshneys.ecommerce.ecommerce_backend.Model.User;
 import com.varshneys.ecommerce.ecommerce_backend.payload.AuthRequest;
 import com.varshneys.ecommerce.ecommerce_backend.payload.AuthResponse;
+import com.varshneys.ecommerce.ecommerce_backend.payload.RegisterRequest;
 import com.varshneys.ecommerce.ecommerce_backend.repository.UserRepository;
 import com.varshneys.ecommerce.ecommerce_backend.security.JwtUtil;
 import com.varshneys.ecommerce.ecommerce_backend.security.UserDetailImpl;
@@ -61,35 +63,22 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-
-        if (userRepository.existsByEmail(user.getEmail())) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
             return ResponseEntity.badRequest().body("Email is already taken!");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setRole(Role.valueOf(request.getRole()));
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        return ResponseEntity.ok("User registered successfully"); 
+        userRepository.save(user);
+        return ResponseEntity.ok("User registered successfully");
     }
 
-    // oauth login
-    // @GetMapping("/google/success")
-    // public ResponseEntity<AuthResponse> googleLogin(@AuthenticationPrincipal OidcUser user) {
-    //     String email = user.getEmail();
-        
-    //     User existingUser = userRepository.findByEmail(email)
-    //     .orElseGet(() -> {
-    //         User newUser = new User();
-    //         newUser.setEmail(email);
-    //         newUser.setPassword(null); 
-    //         newUser.setRole(Role.USER);
-    //         return userRepository.save(newUser);
-    //     });
-
-    //     String jwt = jwtUtil.generateToken(email);
-    //     return ResponseEntity.ok(new AuthResponse(jwt, existingUser.getUserId(), email));
-    // }
+    
     @GetMapping("/id")
     public ResponseEntity<Long> getUserId(@RequestParam("email") String email) { 
         // logger.info("Received email: {}", email);

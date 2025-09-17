@@ -39,12 +39,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    // public List<String> getRoles() {
-    //     return List.of(role.name());
-    // }
-    // public void setRoles(List<String> roles) {
-    //     this.role = Role.valueOf(roles.get(0));
-    // }
+   
     public Role getRole() { // Add the getRole() method!
         return role;
     }

@@ -68,7 +68,7 @@ public class AdminController {
         }
     }
 
-    @PutMapping("/users/{id}")
+    @PostMapping("/users/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user) {
         try {
             User updatedUser = adminService.updateUser(id, user);

@@ -61,14 +61,7 @@ public class ProductRequestController {
 
         try {
 
-            // System.out.println("name: " + name);
-            // System.out.println("description: " + description);
-            // System.out.println("price: " + price);
-            // System.out.println("quantity: " + quantity);
-            // System.out.println("categoryId: " + categoryId);
-            // System.out.println("sellerId: " + sellerId);
-            // System.out.println("image: " + file.getOriginalFilename());
-
+           
 
             // Save the image file
             String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
