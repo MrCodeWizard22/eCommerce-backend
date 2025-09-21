@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,52 +23,53 @@ import com.varshneys.ecommerce.ecommerce_backend.services.AdminService;
 
 @RestController
 @RequestMapping("/api/admin")
-@CrossOrigin(origins = "http://localhost:5173")
+// @CrossOrigin(origins = "http://localhost:5173")
 public class AdminController {
     @Autowired
     AdminService adminService;
 
-    // get all users
+    // get all users.
     @GetMapping("/users")
     public List<User> getAllUsers() {
         return adminService.getAllUsers();
     }
 
-    // get all sellers
+    // get all sellers.
     @GetMapping("/sellers")
     public List<User> getAllSellers() {
         return adminService.getAllSellers();
     }
-    // get all orders
+    // get all orders.
     @GetMapping("/orders")
     public List<Order> getAllOrders() {
         return adminService.getAllOrders();
     }
-
+    // .
     @GetMapping("/products")
     public List<Product> getAllProducts() {
         return adminService.getAllProducts();
     }
 
     // User Management CRUD Operations
-    @PostMapping("/users")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        try {
-            User createdUser = adminService.createUser(user);
-            Map<String, Object> response = new HashMap<>();
-            response.put("status", "success");
-            response.put("message", "User created successfully");
-            response.put("user", createdUser);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("status", "error");
-            errorResponse.put("message", "Failed to create user: " + e.getMessage());
-            return ResponseEntity.status(500).body(errorResponse);
-        }
-    }
+    // @PostMapping("/users")
+    // public ResponseEntity<?> createUser(@RequestBody User user) {
+    //     try {
+    //         User createdUser = adminService.createUser(user);
+    //         Map<String, Object> response = new HashMap<>();
+    //         response.put("status", "success");
+    //         response.put("message", "User created successfully");
+    //         response.put("user", createdUser);
+    //         return ResponseEntity.ok(response);
+    //     } catch (Exception e) {
+    //         Map<String, String> errorResponse = new HashMap<>();
+    //         errorResponse.put("status", "error");
+    //         errorResponse.put("message", "Failed to create user: " + e.getMessage());
+    //         return ResponseEntity.status(500).body(errorResponse);
+    //     }
+    // }
 
-    @PostMapping("/users/{id}")
+    @PutMapping("/users/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user) {
         try {
             User updatedUser = adminService.updateUser(id, user);

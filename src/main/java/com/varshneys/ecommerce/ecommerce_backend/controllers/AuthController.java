@@ -27,7 +27,6 @@ import com.varshneys.ecommerce.ecommerce_backend.security.UserDetailImpl;
 
 @RestController
 @RequestMapping("/api/auth")
-// @CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -68,13 +67,20 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Email is already taken!");
         }
 
+        Role role;
+        try {
+            role = Role.valueOf(request.getRole().toUpperCase()); 
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid role provided. Roles can be USER, ADMIN, or SELLER.");
+        }
+
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
-        user.setRole(Role.valueOf(request.getRole()));
+        user.setRole(role);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-
         userRepository.save(user);
+
         return ResponseEntity.ok("User registered successfully");
     }
 
