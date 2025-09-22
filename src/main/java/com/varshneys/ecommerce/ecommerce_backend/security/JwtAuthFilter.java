@@ -31,10 +31,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getServletPath();
-        if (path.startsWith("/api/auth/")) { // bypass JWT check for auth endpoints
+        if (path.equals("/api/auth/login") || path.equals("/api/auth/register")) { 
             chain.doFilter(request, response);
             return;
         }
+
 
         String authHeader = request.getHeader("Authorization");
 

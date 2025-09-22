@@ -37,7 +37,6 @@ public class UserDetailImpl implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
-
     @Override
     public String getPassword() {
         return password;
@@ -58,6 +57,9 @@ public class UserDetailImpl implements UserDetails {
     }
     public String getRole() {
         return role;
+    }
+    public String getName(){
+        return name;
     }
     @Override
     public boolean isAccountNonLocked() {

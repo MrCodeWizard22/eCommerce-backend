@@ -21,6 +21,7 @@ import com.varshneys.ecommerce.ecommerce_backend.Model.User;
 import com.varshneys.ecommerce.ecommerce_backend.payload.AuthRequest;
 import com.varshneys.ecommerce.ecommerce_backend.payload.AuthResponse;
 import com.varshneys.ecommerce.ecommerce_backend.payload.RegisterRequest;
+import com.varshneys.ecommerce.ecommerce_backend.payload.UserResponse;
 import com.varshneys.ecommerce.ecommerce_backend.repository.UserRepository;
 import com.varshneys.ecommerce.ecommerce_backend.security.JwtUtil;
 import com.varshneys.ecommerce.ecommerce_backend.security.UserDetailImpl;
@@ -105,4 +106,25 @@ public class AuthController {
         }
         return ResponseEntity.ok(userId);
     }
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // System.out.println(authentication.toString()); 
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(401).body("User not authenticated");
+        }
+
+        UserDetailImpl userDetails = (UserDetailImpl) authentication.getPrincipal();
+
+        UserResponse userResponse = new UserResponse(
+            userDetails.getUserId(),
+            userDetails.getName(),  
+            userDetails.getUsername(),
+            userDetails.getRole()
+        );
+
+        return ResponseEntity.ok(userResponse);
+    }
+
 }

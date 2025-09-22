@@ -46,10 +46,10 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/id").authenticated() 
                 .requestMatchers("/api/payments/health").permitAll()
                 .requestMatchers("/api/payments/**").authenticated()
-                .requestMatchers("/api/auth/**", "/oauth2/**", "/login/oauth2/**").permitAll()
+                .requestMatchers("/api/auth/login","/api/auth/register", "/oauth2/**", "/login/oauth2/**").permitAll()
+                .requestMatchers("/api/auth/id", "/api/auth/me").authenticated() 
                 .requestMatchers("/api/categories/**").permitAll()
                 .requestMatchers("/images/**").permitAll()
                 .requestMatchers("/api/products").permitAll()
