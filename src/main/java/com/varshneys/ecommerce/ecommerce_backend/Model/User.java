@@ -40,7 +40,7 @@ public class User {
     private Role role;
 
    
-    public Role getRole() { // Add the getRole() method!
+    public Role getRole() { 
         return role;
     }
 

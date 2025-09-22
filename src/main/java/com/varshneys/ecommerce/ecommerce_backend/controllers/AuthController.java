@@ -37,9 +37,9 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, 
-                          UserDetailsService userDetailsService, UserRepository userRepository, 
-                          PasswordEncoder passwordEncoder) {
+    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil,
+            UserDetailsService userDetailsService, UserRepository userRepository,
+            PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
@@ -54,7 +54,7 @@ public class AuthController {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        
+
         UserDetailImpl userDetails = (UserDetailImpl) authentication.getPrincipal();
         String jwt = jwtUtil.generateToken(userDetails.getUsername(), userDetails.getRole());
 
@@ -63,15 +63,26 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+
         if (userRepository.existsByEmail(request.getEmail())) {
             return ResponseEntity.badRequest().body("Email is already taken!");
         }
 
+        // Check if role is provided
+        if (request.getRole() == null || request.getRole().isBlank()) {
+            return ResponseEntity.badRequest().body("Role is required. Only USER or SELLER are allowed.");
+        }
+
         Role role;
         try {
-            role = Role.valueOf(request.getRole().toUpperCase()); 
+            role = Role.valueOf(request.getRole().toUpperCase());
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Invalid role provided. Roles can be USER, ADMIN, or SELLER.");
+            return ResponseEntity.badRequest().body("Invalid role. Only USER or SELLER are allowed.");
+        }
+
+        // Explicitly allow only USER or SELLER
+        if (role != Role.USER && role != Role.SELLER) {
+            return ResponseEntity.badRequest().body("Invalid role. Only USER or SELLER are allowed.");
         }
 
         User user = new User();
@@ -84,9 +95,8 @@ public class AuthController {
         return ResponseEntity.ok("User registered successfully");
     }
 
-    
     @GetMapping("/id")
-    public ResponseEntity<Long> getUserId(@RequestParam("email") String email) { 
+    public ResponseEntity<Long> getUserId(@RequestParam("email") String email) {
         // logger.info("Received email: {}", email);
 
         Long userId = userRepository.getUserIdByEmail(email);

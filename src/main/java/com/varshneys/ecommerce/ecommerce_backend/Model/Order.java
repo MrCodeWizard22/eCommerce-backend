@@ -3,7 +3,7 @@ package com.varshneys.ecommerce.ecommerce_backend.Model;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -58,7 +58,7 @@ public class Order {
 
     // Payment tracking
     private LocalDateTime paymentDate;
-    private String paymentStatus; // PENDING, COMPLETED, FAILED, REFUNDED
+    private String paymentStatus; 
     private String refundId;
     private double refundAmount;
     private LocalDateTime refundDate;
@@ -69,18 +69,17 @@ public class Order {
     private LocalDateTime deliveredAt;
     private LocalDateTime cancelledAt;
 
-    @JsonIgnoreProperties({"orders", "password", "role"})
+    // ✅ Back reference to User (prevents infinite recursion)
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference("user-orders")
     private User user;
 
+    // ✅ Forward reference for items
     @JsonManagedReference("order-items")
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private ShippingDetails shippingDetails;
-
-    // getter and setter methods
-
 }
