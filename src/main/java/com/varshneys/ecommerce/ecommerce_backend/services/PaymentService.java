@@ -26,9 +26,7 @@ public class PaymentService {
     @Autowired
     private OrderService orderService;
 
-    /**
-     * Create Razorpay order with enhanced options
-     */
+
     public Order createRazorpayOrder(int amount) throws RazorpayException {
         return createRazorpayOrder(amount, null);
     }
@@ -37,7 +35,7 @@ public class PaymentService {
         RazorpayClient razorpayClient = new RazorpayClient(keyId, keySecret);
 
         JSONObject orderRequest = new JSONObject();
-        orderRequest.put("amount", amount * 100); // Convert to paise
+        orderRequest.put("amount", amount * 100); 
         orderRequest.put("currency", "INR");
         orderRequest.put("receipt", "order_" + System.currentTimeMillis());
 
@@ -54,9 +52,7 @@ public class PaymentService {
         return razorpayClient.orders.create(orderRequest);
     }
 
-    /**
-     * Validate payment signature
-     */
+    
     public boolean validatePaymentSignature(String orderId, String paymentId, String signature) {
         try {
             String data = orderId + "|" + paymentId;
@@ -67,17 +63,13 @@ public class PaymentService {
         }
     }
 
-    /**
-     * Fetch payment details from Razorpay
-     */
+    
     public Payment fetchPaymentDetails(String paymentId) throws RazorpayException {
         RazorpayClient razorpayClient = new RazorpayClient(keyId, keySecret);
         return razorpayClient.payments.fetch(paymentId);
     }
 
-    /**
-     * Process payment verification and update order
-     */
+   
     public Map<String, Object> processPaymentVerification(String razorpayOrderId,
                                                          String razorpayPaymentId,
                                                          String razorpaySignature,

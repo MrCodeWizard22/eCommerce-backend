@@ -262,19 +262,17 @@ public class OrderService {
      * Update payment details after successful payment
      */
     public void updatePaymentDetails(Long orderId, String razorpayOrderId,
-                                   String razorpayPaymentId, String razorpaySignature) {
+                               String razorpayPaymentId, String razorpaySignature) {
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new RuntimeException("Order not found"));
 
         order.setRazorpayOrderId(razorpayOrderId);
         order.setRazorpayPaymentId(razorpayPaymentId);
         order.setRazorpaySignature(razorpaySignature);
-        order.setOrderStatus(OrderStatus.PAID.getCode());
-        order.setPaymentStatus(PaymentStatus.COMPLETED.getDescription());
-        order.setPaymentDate(LocalDateTime.now());
 
         orderRepository.save(order);
     }
+
 
     /**
      * Update payment status
