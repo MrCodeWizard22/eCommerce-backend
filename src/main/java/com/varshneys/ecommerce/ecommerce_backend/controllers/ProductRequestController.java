@@ -63,25 +63,22 @@ public class ProductRequestController {
 
            
 
-            // Save the image file
             String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
             Path filePath = Paths.get(UPLOAD_DIR, fileName);
             Files.write(filePath, file.getBytes());
 
-            // Create a new ProductRequest object
             ProductRequest request = new ProductRequest();
             request.setName(name);
             request.setDescription(description);
             request.setPrice(price);
             request.setQuantity(quantity);
             request.setImageUrl(fileName);
-            request.setStatus(0); // 0 = pending
+            request.setStatus(0); 
 
             Category category = new Category();
             category.setCategoryId(categoryId);
             request.setCategory(category);
 
-            // Retrieve the seller by ID (assuming you have a User entity and UserRepository)
             User seller = userRepository.findById(sellerId)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid seller ID"));
             
